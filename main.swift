@@ -1,11 +1,22 @@
-print("Добро пожаловать в игру \"Быки и коровы\"!")
-print("Введите длинну числа: 2 или 3 или 4. -> !")
+class Publisher {
+    var sizeCard: Int
+    var numbers: Array<Int>
 
-func greet(person: String) -> String {
-    let greeting = "Hello, " + person + "!"
-    return greeting
+    init(sizeCard: Int = 5){
+        self.sizeCard = sizeCard
+        let n = Array(0...90)
+        self.numbers = (n as Array).shuffled() as! [Int]
+    }
+
+    func publish() -> Int{
+        return self.numbers.removeLast()
+    } 
 }
 
-var name = 121231231
 
-print("(name)")
+func main(){
+    let publisher: Publisher = Publisher()
+    print(publisher.numbers)
+}
+
+main()
