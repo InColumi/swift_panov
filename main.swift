@@ -1,9 +1,13 @@
-protocol INotifier {
-    func notify()
+protocol IChecker {
+    func checkNumber(number: Int)  -> Bool
+}
+
+protocol IPublisher{
+    func addListener(listener: IChecker)
 }
 
 
-class Player: INotifier {
+class Player: IChecker {
     var maxNumber: Int
     var name: String
     var cardSize: Int
@@ -44,27 +48,55 @@ class Player: INotifier {
 }
 
 
-class Publisher {
+class Publisher: IPublisher {
     var sizeCard: Int
     var numbers: Array<Int>
+    var players: Array<IChecker>
 
-    init(sizeCard: Int = 5){
+    init(sizeCard: Int = 90){
+        self.players = Array<IChecker>()
         self.sizeCard = sizeCard
         let n = Array(0...self.sizeCard)
         self.numbers = (n as Array).shuffled() as! [Int]
     }
 
-    func publish() -> Int{
-        var newNumber: Int = -1
-        if (self.numbers.isEmpty == false){
-            newNumber = self.numbers.removeLast()
+    func StartGame() {
+        var isExit = false
+        while(isExit == false && self.numbers.count > 0){
+            print(self.numbers)
+            let newNumber = self.numbers.removeLast()
+            print(newNumber)
+            for player in players{
+                if(player.checkNumber(number: newNumber)){
+                    print("Player win!")
+                    isExit = true
+                    break
+                }
+            }
         }
-        return newNumber
-    } 
+        if (self.numbers.count == 0){
+            print("Game is over!!!")
+        }
+    }
+
+    func addListener(listener: IChecker){
+        self.players.insert(listener, at: 0)
+    }
 }
 
 
 func main(){
+    let player1: Player = Player(name: "Max1")
+    let player2: Player = Player(name: "Max2")
+    print(player1.card)
+    print(player2.card)
+
+
+    let publisher = Publisher()
+    publisher.addListener(listener: player1)
+    publisher.addListener(listener: player2)
+
+    publisher.StartGame()
     
 }
 
